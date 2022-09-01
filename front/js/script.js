@@ -24,7 +24,7 @@ fetch('http://localhost:3000/api/products')
         titleH3.textContent = data[i].name;
         titleH3.classList.add("productName")
 
-        //Création des paragraphe
+        //Création des paragraphes
         pDescription = document.createElement('p');
         pDescription.textContent = data[i].description;
         pDescription.classList.add ("productDescription")
@@ -37,8 +37,9 @@ fetch('http://localhost:3000/api/products')
 
         //Création du lien
         const lien = document.createElement("a");
-        lien.appendChild (articleProduct)
-
+        lien.appendChild (articleProduct);
+        lien.href = `product.html?_id=${data[i]._id} `
+             
         // Rattachement de la balise "a" à la section parent
         document.getElementById('items').appendChild(lien);
     }
