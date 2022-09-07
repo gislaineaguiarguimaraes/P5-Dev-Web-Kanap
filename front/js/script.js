@@ -34,6 +34,7 @@ fetch('http://localhost:3000/api/products')
         articleProduct.appendChild(imgProduct);
         articleProduct.appendChild(titleH3);
         articleProduct.appendChild(pDescription);
+        
 
         //Création du lien
         const lien = document.createElement("a");
