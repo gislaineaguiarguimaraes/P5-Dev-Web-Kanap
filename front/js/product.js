@@ -77,23 +77,33 @@ fetch(`http://localhost:3000/api/products/${myId}`)
         let cart = localStorage.getItem("cart");
         console.log(cart);
         if (cart == null) {
-            return [];
+            return[];
         }else {
             return JSON.parse(cart);
         }
     }
 
     function addCart(product) {
-        let cart = getCart ();
+        let cart = getCart();
         let foundProduct = cart.find(p => p.id == product.id && p.color == product.color);
-        console.log(product.id);
+        console.log(foundProduct);
         if (foundProduct != undefined){
+            console.log(foundProduct.quantity)
+            console.log(product.quantity)
             foundProduct.quantity += product.quantity;
+            console.log(foundProduct)
+            
+            
         }else{
             cart.push(product);
+            console.log(foundProduct)
+            
+            
         }
         //appel function de sauvegarde dans le localStorage
-        saveToCart(product); 
+        saveToCart(product);
+        console.log(product);
+        console.log(cart);
     }
     
 })
