@@ -49,10 +49,11 @@ fetch(`http://localhost:3000/api/products/${myId}`)
         let quantityKanap = document.querySelector('#quantity');
         let colorKanap = document.querySelector('#colors').value;
   
-        console.log(colorKanap);
         if (colorKanap == "" || quantityKanap.value == 0  ){
             alert('Complétez les informations pour continuer.');
-        }else {
+        }else if (quantityKanap.value < 0 || quantityKanap.value > 100){
+            alert("[ERREUR] Nombre d'articles acceptés de 1-100");
+        }else{
             //Ajout des info du produit choisi dans l'objet kanap
             let kanap = {
                 id: myId,
@@ -63,7 +64,6 @@ fetch(`http://localhost:3000/api/products/${myId}`)
             addCart(kanap);
         }
     })
-
 
     //Ajout dans le local storage
     function saveToCart(kanap) {
@@ -88,23 +88,19 @@ fetch(`http://localhost:3000/api/products/${myId}`)
         let foundProduct = cart.find(p => p.id == product.id && p.color == product.color);
         console.log(foundProduct);
         if (foundProduct != undefined){
-            console.log(foundProduct.quantity)
-            console.log(product.quantity)
-            foundProduct.quantity += product.quantity;
-            console.log(foundProduct)
-            
-            
+            if(foundProduct.quantity + product.quantity > 100){
+                alert(`Quantité autorisée dépassée.\r\nCe produit existe déjà dans le panier.`)
+            }else{
+                foundProduct.quantity += product.quantity;
+                localStorage.setItem("cart", JSON.stringify(cart));
+                alert('Produit ajouté au panier');
+            }             
         }else{
-            cart.push(product);
-            console.log(foundProduct)
-            
+            //appel function de sauvegarde dans le localStorage
+            saveToCart(product);
+            alert('Produit ajouté au panier');
             
         }
-        //appel function de sauvegarde dans le localStorage
-        saveToCart(product);
-        console.log(product);
-        console.log(cart);
-    }
-    
+    }   
 })
 
