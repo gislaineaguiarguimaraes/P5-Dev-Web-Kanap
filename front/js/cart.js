@@ -10,101 +10,125 @@ function getCart() {
 let cart = getCart();
 console.log(cart);
 
-//Récupération des informations produit dans l'api
-fetch('http://localhost:3000/api/products')
-  .then((response) => response.json())
-  .then((data) => {
-   
+if(cart.length == 0){
+    const parent = document.querySelector('#cartAndFormContainer');
+    const section = document.querySelector('.cart');
+    parent.removeChild(section);
+    const txtH2 = document.createElement('h2');
+    txtH2.textContent = 'Votre panier est vide.';
+    parent.appendChild(txtH2); 
+
+}else {
     
-    const novaLista = data.filter(function (id) {
-       return id === cart.id
-    });
-    console.log(novaLista)
+    for(let p = 0; p < cart.length; p++){
+        id = cart[p].id;
+        afficheKanap(id, cart[p].color, cart[p].quantity)
+            
+    };
+};
+async function getInformationApi(kanapId){
+    
+}
+async function afficheKanap (kanapId, kanapColor, kanapQuantity){
+     //Recuperation des info du produit avec l'id
+     await fetch(`http://localhost:3000/api/products/${kanapId}`)
+     .then((response) => response.json())
+     .then((kanap) => {
+          
+     //Faire le lien avec le DOM
+     let sectionKanap = document.querySelector('#cart__items');
 
+     //Creation article produit
+     let articleProduct = document.createElement('article');
+     articleProduct.className ='cart__item';
+     sectionKanap.appendChild(articleProduct);
+     
+     //Ajout de l'image du produit
+     let divImg = document.createElement('div');
+     divImg.className = 'cart__item__img';
+     articleProduct.appendChild(divImg);
 
-    //Boucle pour afficher chaque produit dans le panier
-    for (p = 0; p < cart.length; p+=1){
-        
-        //Faire le lien avec le DOM
-        let sectionKanap = document.querySelector('#cart__items');
+     let imgProduct= document.createElement("img");
+     imgProduct.src = kanap.imageUrl;
+     divImg.appendChild(imgProduct);
+     
+     //Ajout de la div pour la description de l'article 
+     let divDescription= document.createElement('div');
+     divDescription.className = 'cart__item__content__description';
 
-        //Creation article produit
-        let articleProduct = document.createElement('article');
-        articleProduct.className ='cart__item';
-        sectionKanap.appendChild(articleProduct);
-        
-        //Ajout de l'image du produit
-        let divImg = document.createElement('div');
-        divImg.className = 'cart__item__img';
-        articleProduct.appendChild(divImg);
+     let h2Description = document.createElement('h2');
+     h2Description.textContent = kanap.name;
+     divDescription.appendChild (h2Description);
 
-        let imgProduct= document.createElement("img");
-        imgProduct.src = data.imageUrl;
-        divImg.appendChild(imgProduct);
-        
-        //Ajout de la div pour la description de l'article 
-        let divDescription= document.createElement('div');
-        divDescription.className = 'cart__item__content__description';
+     let pDescriptionColor = document.createElement('p');
+     pDescriptionColor.textContent = kanapColor;
+     divDescription.appendChild (pDescriptionColor);
 
-        let h2Description = document.createElement('h2');
-        h2Description.textContent = 'Meu produto';
-        divDescription.appendChild (h2Description);
+     let pDescriptionPrice = document.createElement('p');
+     pDescriptionPrice.textContent = kanap.price;
+     divDescription.appendChild (pDescriptionPrice);
 
-        let pDescriptionColor = document.createElement('p');
-        pDescriptionColor.textContent = cart[p].color;
-        divDescription.appendChild (pDescriptionColor);
+     let divSettings = document.createElement('div');
+     divSettings.className = 'cart__item__content__settings';
+     articleProduct.appendChild(divSettings);
 
-        let pDescriptionPrice = document.createElement('p');
-        pDescriptionPrice.textContent = 'Preço';
-        divDescription.appendChild (pDescriptionPrice);
+     //Ajout de la div pour la quantité de l'article
+     let divQnt = document.createElement('div');
+     divQnt.className = 'cart__item__content__settings__quantity';
+     divSettings.appendChild(divQnt);
 
-        let divSettings = document.createElement('div');
-        divSettings.className = 'cart__item__content__settings';
-        articleProduct.appendChild(divSettings);
+     let pQnt = document.createElement('p');
+     pQnt.textContent = 'Qté :'
+     divQnt.appendChild(pQnt);
 
-        //Ajout de la div pour la quantité de l'article
-        let divQnt = document.createElement('div');
-        divQnt.className = 'cart__item__content__settings__quantity';
-        divSettings.appendChild(divQnt);
+     //Création input quantité
+     let inputQnt = document.createElement('input');
+     inputQnt.type = 'number';
+     inputQnt.className = 'itemQuantity';
+     inputQnt.name = 'itemQuantity';
+     inputQnt.min = '1';
+     inputQnt.max = '100';
+     inputQnt.setAttribute('value', kanapQuantity);
+     divQnt.appendChild(inputQnt);
 
-        let pQnt = document.createElement('p');
-        pQnt.textContent = 'Qté :'
-        divQnt.appendChild(pQnt);
+     //Ajout div pour la partie supprimer un produit
+     let divSettingsDelete = document.createElement('div');
+     divSettingsDelete.className = 'cart__item__content__settings__delete';
+     divSettings.appendChild(divSettingsDelete);
 
-        //Création input quantité
-        let inputQnt = document.createElement('input');
-        inputQnt.type = 'number';
-        inputQnt.className = 'itemQuantity';
-        inputQnt.name = 'itemQuantity';
-        inputQnt.min = '1';
-        inputQnt.max = '100';
-        inputQnt.value = cart[p].quantity ;
-        divQnt.appendChild(inputQnt);
+     let pDeleteItem = document.createElement('p');
+     pDeleteItem.className = 'deleteItem';
+     pDeleteItem.textContent = 'Supprimer';
+     divSettingsDelete.appendChild(pDeleteItem);
 
-        //Ajout div pour la partie supprimer un produit
-        let divSettingsDelete = document.createElement('div');
-        divSettingsDelete.className = 'cart__item__content__settings__delete';
-        divSettings.appendChild(divSettingsDelete);
+     //Ajout de la div qui contiendra les informations sur le produit
+     let divCartContent = document.createElement('div');
+     divCartContent.className = 'cart__item__content';
+     divCartContent.appendChild(divDescription);
+     divCartContent.appendChild(divSettings);
+     articleProduct.appendChild(divCartContent);
 
-        let pDeleteItem = document.createElement('p');
-        pDeleteItem.className = 'deleteItem';
-        pDeleteItem.textContent = 'Supprimer';
-        divSettingsDelete.appendChild(pDeleteItem);
+     //Ajout quantité total de produits
 
-        //Ajout de la div qui contiendra les informations sur le produit
-        let divCartContent = document.createElement('div');
-        divCartContent.className = 'cart__item__content';
-        divCartContent.appendChild(divDescription);
-        divCartContent.appendChild(divSettings);
-        articleProduct.appendChild(divCartContent);
+    let totalQuantity = 0;
+
+    for (let p = 0; p < cart.length; p++){
+        totalQuantity += cart[p].quantity;
         
     }
+    let totalQnt = document.querySelector('#totalQuantity');
+    totalQnt.textContent = totalQuantity;
 
+    //Ajout total prix produit
+    let totalP = 0;
+    let totalCost = document.querySelector('#totalPrice');
+    totalP += kanap.price;
+
+    console.log(totalP)
+
+
+     
 });
 
-
-    
-
-
-
+};  
 
