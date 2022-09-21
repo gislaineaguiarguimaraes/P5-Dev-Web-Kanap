@@ -37,7 +37,11 @@ await fetch(`http://localhost:3000/api/products/${kanapId}`)
     //Creation article produit
     let articleProduct = document.createElement('article');
     articleProduct.className ='cart__item';
+    articleProduct.setAttribute ("data-id", kanapId);
+    articleProduct.setAttribute ("data-color", kanapColor);
+
     sectionkanap.appendChild(articleProduct);
+
 
     //Ajout de l'image du produit
     let divImg = document.createElement('div');
@@ -64,7 +68,7 @@ await fetch(`http://localhost:3000/api/products/${kanapId}`)
 
     //Ajout prix du produit
     let pDescriptionPrice = document.createElement('p');
-    pDescriptionPrice.textContent = kanap.price;
+    pDescriptionPrice.textContent = ` ${kanap.price} €`;
     divDescription.appendChild (pDescriptionPrice);
 
     let divSettings = document.createElement('div');
@@ -129,19 +133,52 @@ await fetch(`http://localhost:3000/api/products/${kanapId}`)
     
         for (let i = 0; i < inputQuantity.length; i++){
             inputQuantity[i].addEventListener("change" , (event) => {
-                event.preventDefault();
+                //event.preventDefault();
                 if(inputQuantity[i].value != cart[i].quantity){
                     cart[i].quantity = inputQuantity[i].value;
                     localStorage.setItem("cart", JSON.stringify(cart));
                 }
                 location.reload();
-            });
-            
+            }); 
         };
-    ;
     };
     modifQuantity()
 
+    //Function pour supprimer un produit du panier
+    let btnDelete = document.querySelectorAll('.deleteItem');
     
+    for(let i = 0; i < btnDelete.length; i++){
+        btnDelete[i].addEventListener('click', (e)=>{
+            
+            let removeColor = btnDelete[i].closest("article").dataset.color;
+            let removeId = btnDelete[i].closest("article").dataset.id;
+            
+            console.log(removeId);
+            console.log(removeColor);
+            cart = cart.filter(item => item.id !== removeId && item.color !== removeColor);
+            console.log(cart);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            // avertir de la suppression et recharger la page
+            if( removeId in cart){
+                console.log('deu merda');
+            }else{
+                alert('Votre article a bien été supprimé.');
+            }
+            location.reload();
+            console.log(removeColor);
+            
+            
+            
+        });
+
+    };
+  
+    
+        
+        
+
+   
+
+     
 });  
 };
