@@ -133,7 +133,7 @@ await fetch(`http://localhost:3000/api/products/${kanapId}`)
     
         for (let i = 0; i < inputQuantity.length; i++){
             inputQuantity[i].addEventListener("change" , (event) => {
-                //event.preventDefault();
+                event.preventDefault();
                 if(inputQuantity[i].value != cart[i].quantity){
                     cart[i].quantity = inputQuantity[i].value;
                     localStorage.setItem("cart", JSON.stringify(cart));
@@ -157,6 +157,7 @@ await fetch(`http://localhost:3000/api/products/${kanapId}`)
             console.log(removeColor);
             cart = cart.filter(item => item.id !== removeId && item.color !== removeColor);
             console.log(cart);
+            // envoyer les nouvelles données dans le localStorage
             localStorage.setItem("cart", JSON.stringify(cart));
             // avertir de la suppression et recharger la page
             if( removeId in cart){
@@ -164,21 +165,82 @@ await fetch(`http://localhost:3000/api/products/${kanapId}`)
             }else{
                 alert('Votre article a bien été supprimé.');
             }
-            location.reload();
-            console.log(removeColor);
+            //location.reload();
             
             
-            
-        });
-
+            console.log(removeColor);    
+        });     
     };
-  
-    
-        
-        
-
-   
-
-     
 });  
+};
+//identifier le formulaire
+let form = document.querySelector('.cart__order__form');
+//Récupérer les différents éléments du formulaire
+console.log(form.firstName);
+console.log(form.email);
+
+//Écoutez la modification du prénom
+form.firstName.addEventListener('change', function(){
+    validFirstName(this);
+})
+
+let validFirstName = function(data){
+    let nameRegExp = new RegExp(
+        "^[a-zA-Z\u00C0-\u017F-_']{2,} {0,}[a-zA-Z\u00C0-\u017F-_']{0,}$"
+    );
+    let testName = nameRegExp.test(data.value);
+    let firstNameErrorMsg =document.querySelector('#firstNameErrorMsg')
+    if(testName === true){
+        firstNameErrorMsg.textContent = (" ")
+    }else{
+        firstNameErrorMsg.textContent = ('Veuillez entrer un prénom valide.')
+    }
+};
+//Écoutez la modification du nom
+form.lastName.addEventListener('change', function(){
+    validLastName(this);
+})
+
+let validLastName = function(data){
+    let nameRegExp = new RegExp(
+        "^[a-zA-Z\u00C0-\u017F-_']{2,} {0,}[a-zA-Z\u00C0-\u017F-_']{0,} {0,}[a-zA-Z\u00C0-\u017F-_']{0,}$"
+    );
+    let testName = nameRegExp.test(data.value);
+    let lastNameErrorMsg =document.querySelector('#lastNameErrorMsg')
+    console.log(testName);
+    if(testName === true){
+        lastNameErrorMsg.textContent = (" ")
+    }else{
+        lastNameErrorMsg.textContent = ('Veuillez entrer un nom valide.')
+    };
+};
+//Écoutez la modification de l'adresse
+form.address.addEventListener('change', function(){
+    validAddress(this);
+})
+let validAddress = function(data){
+    let addressRegExp = new RegExp(
+       /* "^[0-9.-_]+[,-_;.: ]{1,}[a-zA-Z\u00C0-\u017F-_.;,']+ {0,}[a-zA-Z\u00C0-\u017F-_']{0,} {0,}[a-zA-Z\u00C0-\u017F-_']{0,}$"*/
+    );
+    let testName = addressRegExp.test(data.value);
+    let addressErrorMsg =document.querySelector('#addressErrorMsg')
+    console.log(testName);
+    if(testName === true){
+        addressErrorMsg.textContent = (" ")
+    }else{
+        addressErrorMsg.textContent = ('Veuillez entrer un nom valide.')
+    };
+};
+
+//Écoutez la modification du mail
+form.email.addEventListener('change', function(){
+    validEmail(this);
+});
+
+let validEmail = function(data){
+    let emailRegExp = new RegExp(
+        '^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$'
+    );
+    let testEmail = emailRegExp.test(data.value);
+    console.log(testEmail);
 };
