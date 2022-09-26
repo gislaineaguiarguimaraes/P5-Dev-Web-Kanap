@@ -165,7 +165,7 @@ await fetch(`http://localhost:3000/api/products/${kanapId}`)
             }else{
                 alert('Votre article a bien été supprimé.');
             }
-            //location.reload();
+            location.reload();
             
             
             console.log(removeColor);    
@@ -176,59 +176,90 @@ await fetch(`http://localhost:3000/api/products/${kanapId}`)
 //identifier le formulaire
 let form = document.querySelector('.cart__order__form');
 //Récupérer les différents éléments du formulaire
-console.log(form.firstName);
-console.log(form.email);
+
 
 //Écoutez la modification du prénom
 form.firstName.addEventListener('change', function(){
     validFirstName(this);
 })
-
-let validFirstName = function(data){
+let firstName;
+function validFirstName(data){
     let nameRegExp = new RegExp(
         "^[a-zA-Z\u00C0-\u017F-_']{2,} {0,}[a-zA-Z\u00C0-\u017F-_']{0,}$"
     );
-    let testName = nameRegExp.test(data.value);
+    let testName = nameRegExp.test(data.value.trim());
     let firstNameErrorMsg =document.querySelector('#firstNameErrorMsg')
+    console.log(testName);
     if(testName === true){
+        firstName = data.value.trim();
         firstNameErrorMsg.textContent = (" ")
+        return true
     }else{
         firstNameErrorMsg.textContent = ('Veuillez entrer un prénom valide.')
     }
 };
+
 //Écoutez la modification du nom
 form.lastName.addEventListener('change', function(){
     validLastName(this);
 })
-
-let validLastName = function(data){
+let lastName;
+function validLastName(data){
     let nameRegExp = new RegExp(
-        "^[a-zA-Z\u00C0-\u017F-_']{2,} {0,}[a-zA-Z\u00C0-\u017F-_']{0,} {0,}[a-zA-Z\u00C0-\u017F-_']{0,}$"
+        "^[a-zA-Z\u00C0-\u017F-_']{2,} {0,}[a-zA-Z\u00C0-\u017F-_']{2,} {0,}[a-zA-Z\u00C0-\u017F-_']{2,} {0,}([\s][a-zA-Z\u00C0-\u017F-_']+)?$"
     );
-    let testName = nameRegExp.test(data.value);
+    let testLastName = nameRegExp.test(data.value.trim());
     let lastNameErrorMsg =document.querySelector('#lastNameErrorMsg')
-    console.log(testName);
-    if(testName === true){
-        lastNameErrorMsg.textContent = (" ")
+    console.log(testLastName);
+    if(testLastName === true){
+        lastName = data.value.trim();
+        lastNameErrorMsg.textContent = (" ");
+        return true;
     }else{
-        lastNameErrorMsg.textContent = ('Veuillez entrer un nom valide.')
+        lastNameErrorMsg.textContent = ('Veuillez entrer un nom valide.');
     };
 };
 //Écoutez la modification de l'adresse
 form.address.addEventListener('change', function(){
     validAddress(this);
 })
-let validAddress = function(data){
+let address;
+function validAddress(data){
     let addressRegExp = new RegExp(
-       /* "^[0-9.-_]+[,-_;.: ]{1,}[a-zA-Z\u00C0-\u017F-_.;,']+ {0,}[a-zA-Z\u00C0-\u017F-_']{0,} {0,}[a-zA-Z\u00C0-\u017F-_']{0,}$"*/
+        "^[0-9.-_]+[,-_;.: ]{1,}[a-zA-Z\u00C0-\u017F-_.;,']+ {0,}[a-zA-Z\u00C0-\u017F-_']{0,} {0,}[a-zA-Z\u00C0-\u017F-_']{0,}$"
     );
-    let testName = addressRegExp.test(data.value);
+    let testAddress = addressRegExp.test(data.value.trim());
     let addressErrorMsg =document.querySelector('#addressErrorMsg')
-    console.log(testName);
-    if(testName === true){
+    console.log(testAddress);
+    if(testAddress === true){
+        address = data.value.trim();
         addressErrorMsg.textContent = (" ")
+        return true
     }else{
-        addressErrorMsg.textContent = ('Veuillez entrer un nom valide.')
+        addressErrorMsg.textContent = ('Veuillez entrer un adresse valide.')
+    };
+};
+
+//Écoutez la modification de la ville
+form.city.addEventListener('change', function(){
+    validCity(this);
+})
+
+let city;
+
+function validCity(data){
+    let cityRegExp = new RegExp(
+        "^[a-zA-Z\u00C0-\u017F-_.;,']+ {0,}[a-zA-Z\u00C0-\u017F-_']+$"
+    );
+    let testCity = cityRegExp.test(data.value.trim());
+    let cityErrorMsg =document.querySelector('#cityErrorMsg')
+    console.log(testCity);
+    if(testCity === true){
+        city = data.value.trim();
+        cityErrorMsg.textContent = (" ")
+        return true
+    }else{
+        cityErrorMsg.textContent = ('Veuillez entrer un nom valide.')
     };
 };
 
@@ -237,10 +268,64 @@ form.email.addEventListener('change', function(){
     validEmail(this);
 });
 
-let validEmail = function(data){
+let email;
+
+function validEmail(data){
     let emailRegExp = new RegExp(
         '^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$'
     );
-    let testEmail = emailRegExp.test(data.value);
+    let testEmail = emailRegExp.test(data.value.trim());
+    let emailErrorMsg =document.querySelector('#emailErrorMsg')
     console.log(testEmail);
+    if(testEmail === true){
+        email = data.value.trim();
+        emailErrorMsg.textContent = (" ")
+        return true
+    }else{
+        emailErrorMsg.textContent = ('Veuillez entrer un nom valide.')
+    };
+};
+
+//Écoutez la soumission du formulaire
+function createData(){
+    form.addEventListener('submit', function(e){
+        e.preventDefault();  
+        let contact = {
+            firstName: firstName,
+            lastName: lastName,
+            address: address,
+            city: city,
+            email: email,
+            
+        };
+        console.log(contact);
+        let productList = cart;
+        console.log(productList);
+        submitData(contact, productList);
+    });
+    form.submit;
+};
+createData();
+
+function submitData(contact, productList){
+    const data = {
+        contact, productList
+    };
+    console.log(data);
+    const promise = fetch('http://localhost:3000/api/products', {
+        method:'POST',
+        headers: {
+            'Content-Type' : 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+    console.log(promise);
+    promise.then(async(response)=>{
+        try{
+            //let content = await response.json();
+            console.log(response);
+        }catch(e){
+            console.log(e);
+        }
+    });
 };
