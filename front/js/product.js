@@ -93,12 +93,23 @@ fetch(`http://localhost:3000/api/products/${myId}`)
             }else{
                 foundProduct.quantity += product.quantity;
                 localStorage.setItem("cart", JSON.stringify(cart));
-                alert('Produit ajouté au panier');
+                
+                let inputConfirm = confirm('Produit ajouté au panier.\r\nVoulez-vous aller directement au panier?')
+                if(inputConfirm == true){
+                    document.location.href = 'cart.html';
+                }else{
+                    document.location.href = 'index.html';
+                }
             }             
         }else{
             //appel function de sauvegarde dans le localStorage
             saveToCart(product);
-            alert('Produit ajouté au panier');
+            let inputConfirm = confirm('Produit ajouté au panier.\r\nVoulez-vous aller directement au panier?')
+                if(inputConfirm == true){
+                    document.location.href = 'cart.html';
+                }else{
+                    document.location.href = 'index.html';
+                }
             
         }
     }   
