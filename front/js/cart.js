@@ -150,16 +150,20 @@ await fetch(`http://localhost:3000/api/products/${kanapId}`)
         e.preventDefault();
         let removeColor = btnDeleteItem.closest("article").dataset.color;
         let removeId = btnDeleteItem.closest("article").dataset.id;
-        cart = cart.filter(item => item.id !== removeId && item.color !== removeColor);
-        // envoyer les nouvelles données dans le localStorage
-        localStorage.setItem("cart", JSON.stringify(cart));
-        // avertir de la suppression et recharger la page
-        if (removeId in cart && removeColor in cart){
-            alert("Une erreur s'est produite.")
-        }else{
-            alert('Votre article a bien été supprimé.');
-        }
-        location.reload();
+        let confirmRemove = confirm('Voulez-vous vraiment supprimer ce produit du panier?')
+        console.log(confirmRemove);
+        if (confirmRemove == true){
+            cart = cart.filter(item => item.id !== removeId && item.color !== removeColor);
+            // envoyer les nouvelles données dans le localStorage
+            localStorage.setItem("cart", JSON.stringify(cart));
+            // avertir de la suppression et recharger la page
+            if (removeId in cart && removeColor in cart){
+                alert("Une erreur s'est produite.")
+            }else{
+                alert('Votre article a bien été supprimé.');
+            }
+            location.reload();
+        }  
     })
 });  
 };
@@ -167,7 +171,6 @@ if(cart.length > 0){
     //identifier le formulaire
     let form = document.querySelector('.cart__order__form');
     //Récupérer les différents éléments du formulaire
-
 
     //Écoutez la modification du prénom
     form.firstName.addEventListener('change', function(){
@@ -302,7 +305,7 @@ if(cart.length > 0){
 
     };
     createData();
-
+    //Envoyez la commande et les données du formulaire au backend et récupérez l'id de confirmation
     function submitData(contact, products){
         const data = {
             contact, products,
@@ -318,7 +321,7 @@ if(cart.length > 0){
         }) 
         .then((response) => response.json())
         .then((dataResponse) => {
-            
+            //Renvoyer le client à la page de confirmation
             document.location.href = 'confirmation.html?id='+ dataResponse.orderId;
             localStorage.clear();
             console.log(dataResponse.orderId);
