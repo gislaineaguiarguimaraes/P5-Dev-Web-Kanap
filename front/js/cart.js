@@ -134,7 +134,11 @@ await fetch(`http://localhost:3000/api/products/${kanapId}`)
         for (let i = 0; i < inputQuantity.length; i++){
             inputQuantity[i].addEventListener("change" , (event) => {
                 event.preventDefault();
-                if(inputQuantity[i].value != cart[i].quantity){
+                if(inputQuantity[i].value > 100){
+                    alert('Quantité non autorisée (Maximum 100)')
+                    inputQuantity[i].value = cart[i].quantity
+                    //inputQuantity[i].value = 100;
+                }else if(inputQuantity[i].value != cart[i].quantity){
                     cart[i].quantity = inputQuantity[i].value;
                     localStorage.setItem("cart", JSON.stringify(cart));
                     location.reload();
