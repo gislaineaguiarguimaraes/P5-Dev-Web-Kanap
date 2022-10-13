@@ -194,6 +194,7 @@ if(cart.length > 0){
             return true
         }else{
             firstNameErrorMsg.textContent = ('Veuillez entrer un prénom valide.')
+            firstName = "";
         }
     };
 
@@ -204,7 +205,7 @@ if(cart.length > 0){
     let lastName;
     function validLastName(data){
         let nameRegExp = new RegExp(
-            "^[a-zA-Z\u00C0-\u017F-_']{2,} {0,}[a-zA-Z\u00C0-\u017F-_']{2,} {0,}[a-zA-Z\u00C0-\u017F-_']{2,} {0,}([\s][a-zA-Z\u00C0-\u017F-_']+)?$"
+            "^[a-zA-Z\u00C0-\u017F-_']{1,} {0,}[a-zA-Z\u00C0-\u017F-_']{2,} {0,}[a-zA-Z\u00C0-\u017F-_']{2,} {0,}([\s][a-zA-Z\u00C0-\u017F-_']+)?$"
         );
         let testLastName = nameRegExp.test(data.value.trim());
         let lastNameErrorMsg =document.querySelector('#lastNameErrorMsg')
@@ -215,6 +216,7 @@ if(cart.length > 0){
             return true;
         }else{
             lastNameErrorMsg.textContent = ('Veuillez entrer un nom valide.');
+            lastName = "";
         };
     };
     //Écoutez la modification de l'adresse
@@ -224,7 +226,7 @@ if(cart.length > 0){
     let address;
     function validAddress(data){
         let addressRegExp = new RegExp(
-            "^[0-9.-_]+[,-_;.: ]{1,}[a-zA-Z\u00C0-\u017F-_.;,']+ {0,}[a-zA-Z\u00C0-\u017F-_']{0,} {0,}[a-zA-Z\u00C0-\u017F-_']{0,}$"
+            "^[0-9.-_]+[,-_;.: ]{1,}[a-zA-Z\u00C0-\u017F-_.;,']+ {0,}[a-zA-Z\u00C0-\u017F-_']{0,} {0,}[a-zA-Z\u00C0-\u017F-_']{0,} {0,}[a-zA-Z\u00C0-\u017F-_']{0,}$"
         );
         let testAddress = addressRegExp.test(data.value.trim());
         let addressErrorMsg =document.querySelector('#addressErrorMsg')
@@ -234,7 +236,8 @@ if(cart.length > 0){
             addressErrorMsg.textContent = (" ")
             return true
         }else{
-            addressErrorMsg.textContent = ('Veuillez entrer un adresse valide.')
+            addressErrorMsg.textContent = ('Veuillez entrer un adresse valide.');
+            address = "";
         };
     };
 
@@ -257,7 +260,8 @@ if(cart.length > 0){
             cityErrorMsg.textContent = (" ")
             return true
         }else{
-            cityErrorMsg.textContent = ('Veuillez entrer un nom valide.')
+            cityErrorMsg.textContent = ('Veuillez entrer un nom valide.');
+            city = "";
         };
     };
 
@@ -281,6 +285,7 @@ if(cart.length > 0){
             return true
         }else{
             emailErrorMsg.textContent = ('Veuillez entrer un nom valide.')
+            email = "";
         };
     };
 
@@ -293,18 +298,26 @@ if(cart.length > 0){
                 lastName: lastName,
                 address: address,
                 city: city,
-                email: email,
-                
+                email: email,   
             };
-            console.log(contact);
+
             let products = [];
             for(let i = 0; i < cart.length; i++){
                 products.push(cart[i].id);
 
             }
-            console.log(products);
-            
-            submitData(contact, products);
+            console.log(Object.values(contact));
+            let countValid = 0;
+            for(let item = 0; item < Object.values(contact).length; item +=1){
+                if(Object.values(contact)[item] === ""){
+                    countValid += 1;
+                }
+            }
+            if(countValid > 0){
+                alert('Les informations fournies sont incorrectes.');
+            }else{
+                submitData(contact, products);
+            }
         });
 
     };
