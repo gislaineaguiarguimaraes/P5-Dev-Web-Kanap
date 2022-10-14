@@ -157,7 +157,7 @@ await fetch(`http://localhost:3000/api/products/${kanapId}`)
         let confirmRemove = confirm('Voulez-vous vraiment supprimer ce produit du panier?')
         console.log(confirmRemove);
         if (confirmRemove == true){
-            cart = cart.filter(item => item.id !== removeId && item.color !== removeColor);
+            cart = cart.filter(item => item._id !== removeId && item.color !== removeColor);
             // envoyer les nouvelles données dans le localStorage
             localStorage.setItem("cart", JSON.stringify(cart));
             // avertir de la suppression et recharger la page
